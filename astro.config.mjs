@@ -24,5 +24,7 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    // sanitize-html (CJS) require()s htmlparser2 (ESM-only); Vercel's runtime can't, so bundle all deps there.
+    ssr: { noExternal: process.env.VERCEL ? true : [] },
   },
 });
