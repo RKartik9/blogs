@@ -1,0 +1,78 @@
+---
+import Cover from '@/components/blog/Cover.astro';
+import PostContent from '@/components/blog/PostContent.astro';
+import PostMeta from '@/components/blog/PostMeta.astro';
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import Logo from '@/components/ui/Logo.astro';
+import Tag from '@/components/ui/Tag.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getPost } from '@/lib/posts';
+import { site } from '@/lib/site';
+
+const post = await getPost(Astro.params.slug ?? '');
+if (!post) return Astro.rewrite('/404');
+---
+
+<BaseLayout title={post.title} description={post.excerpt} image={post.coverImage}>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <article>
+    <header class="relative isolate">
+      <div class="backdrop" aria-hidden="true"></div>
+      <Container size="narrow" class="pt-14 sm:pt-20">
+        <div class="flex items-center justify-between">
+          <a href="/" class="group inline-flex items-center gap-1.5 text-sm text-zinc-500 transition hover:text-white">
+            <span class="transition group-hover:-translate-x-0.5">&larr;</span> All writing
+          </a>
+          {Astro.locals.isAdmin && <Button href={`/editor/${post.slug}`} variant="ghost">Edit</Button>}
+        </div>
+
+        {
+          post.tags.length > 0 && (
+            <div class="mt-12 flex flex-wrap gap-1.5">
+              {post.tags.map((tag) => <Tag name={tag} />)}
+            </div>
+          )
+        }
+        <h1 class="mt-6 font-serif text-4xl leading-[1.08] font-medium tracking-tight text-balance sm:text-[3.5rem]">{post.title}</h1>
+        {post.excerpt && <p class="mt-6 text-xl leading-relaxed text-pretty text-zinc-400">{post.excerpt}</p>}
+
+        <div class="mt-10 flex items-center gap-3">
+          <Logo class="size-10" />
+          <div>
+            <p class="text-sm font-medium">{site.name}</p>
+            <PostMeta post={post} />
+          </div>
+        </div>
+      </Container>
+    </header>
+
+    {post.coverImage && (
+      <Container class="mt-12 max-w-5xl">
+        <Cover src={post.coverImage} title={post.title} loading="eager" class="aspect-[16/9] rounded-[1.75rem] shadow-2xl shadow-black/60" />
+      </Container>
+    )}
+
+    <Container size="narrow" class="mt-16">
+      <PostContent html={post.html} />
+    </Container>
+
+    <Container size="narrow" class="mt-24">
+      <div class="flex flex-col gap-5 rounded-[1.5rem] border border-white/[0.08] bg-white/[0.02] p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-center gap-4">
+          <Logo class="size-12" />
+          <div>
+            <p class="text-sm text-zinc-500">Written by</p>
+            <p class="font-serif text-lg font-medium tracking-tight">{site.name}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <Button href={site.portfolio.href} variant="ghost">
+            {site.portfolio.label} <span aria-hidden="true" class="text-accent-400">&nearr;</span>
+          </Button>
+          <Button href="/">More writing</Button>
+        </div>
+      </div>
+    </Container>
+  </article>
+</BaseLayout>

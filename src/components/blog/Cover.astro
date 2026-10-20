@@ -1,0 +1,23 @@
+---
+interface Props {
+  src?: string;
+  title: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+}
+
+const { src, title, class: className, loading = 'lazy' } = Astro.props;
+---
+
+<div class:list={['relative overflow-hidden bg-zinc-900', className]}>
+  {
+    src ? (
+      <img src={src} alt="" loading={loading} class="size-full object-cover transition duration-700 ease-out group-hover:scale-[1.03]" />
+    ) : (
+      <span aria-hidden="true" class="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_30%_20%,rgb(255_255_255/0.06),transparent_60%)] font-serif text-8xl text-white/10 italic">
+        {title.charAt(0)}
+      </span>
+    )
+  }
+  <div class="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-white/10 ring-inset" />
+</div>

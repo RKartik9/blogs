@@ -1,0 +1,11 @@
+---
+import Editor from '@/components/editor/Editor';
+import Container from '@/components/ui/Container.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="New post" showFooter={false}>
+  <Container size="narrow" class="pt-16 pb-10">
+    <Editor client:only="react" />
+  </Container>
+</BaseLayout>

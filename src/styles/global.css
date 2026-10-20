@@ -1,0 +1,153 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/source-serif-4/opsz.css';
+@import '@fontsource-variable/source-serif-4/opsz-italic.css';
+@plugin '@tailwindcss/typography';
+
+/* Always dark: every `dark:` class applies. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Source Serif 4 Variable', ui-serif, Georgia, serif;
+
+  --color-accent-50: oklch(0.98 0.02 50);
+  --color-accent-100: oklch(0.94 0.05 50);
+  --color-accent-400: oklch(0.76 0.15 50);
+  --color-accent-500: oklch(0.69 0.19 45);
+  --color-accent-600: oklch(0.62 0.2 42);
+  --color-accent-700: oklch(0.52 0.17 40);
+}
+
+@layer base {
+  html {
+    @apply bg-[#0a0a0b] text-zinc-100 antialiased;
+    color-scheme: dark;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  ::selection {
+    @apply bg-accent-500/30 text-white;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent-500;
+  }
+}
+
+.prose :where(code):not(:where(pre code))::before,
+.prose :where(code):not(:where(pre code))::after {
+  content: none;
+}
+
+/* One soft warm light from the top */
+.backdrop {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 40rem;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(50rem 24rem at 50% -8rem, color-mix(in oklch, var(--color-accent-500) 14%, transparent), transparent 70%);
+}
+
+/* Header: pinned at the top; on scroll it collapses into the rk. tile, which then lifts and blurs away (scrubbed by scroll).
+   Without scroll-timeline support (or with reduced motion) it simply scrolls off with the page. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .site-header {
+      position: sticky;
+      top: 0;
+    }
+
+    /* Animate the pill itself so the pinch tracks its real width.
+       Longhands on purpose: the minifier folds a shorthand + timeline into an invalid declaration. */
+    .site-header > nav {
+      transform-origin: 1.5rem center;
+      animation-name: header-away;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0 220px;
+    }
+  }
+}
+
+@keyframes header-away {
+  /* 1) the pill wipes in from the right until only the rk. tile is left… */
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+    clip-path: inset(0 0 0 0 round 999px);
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  50% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+    clip-path: inset(0 calc(100% - 3rem) 0 0 round 999px);
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+  }
+  /* 2) …then the tile lifts off, shrinking and blurring as it goes */
+  100% {
+    transform: translateY(-110%) scale(0.7);
+    opacity: 0;
+    filter: blur(12px);
+    clip-path: inset(0 calc(100% - 3rem) 0 0 round 999px);
+    visibility: hidden;
+  }
+}
+
+/* Reading progress bar, pure CSS (hidden where scroll timelines are unsupported) */
+.reading-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  height: 2px;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: var(--color-accent-500);
+  animation-name: reading-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-timeline: scroll(root);
+}
+
+@keyframes reading-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@supports not (animation-timeline: scroll()) {
+  .reading-progress {
+    display: none;
+  }
+}
+
+/* Article images: framed, with the paragraph right after acting as a caption */
+.article img {
+  @apply mx-auto w-full rounded-2xl ring-1 ring-white/10;
+}
+
+.article img + p {
+  @apply -mt-4 text-center font-sans text-sm text-zinc-500 not-italic;
+}
+
+.article img + p em {
+  @apply not-italic;
+}
+
+/* Tiptap editor surface */
+.tiptap {
+  @apply min-h-[50vh] outline-none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply pointer-events-none float-left h-0 text-zinc-400 dark:text-zinc-600;
+}
+
+.tiptap img.ProseMirror-selectednode {
+  @apply ring-2 ring-accent-500;
+}

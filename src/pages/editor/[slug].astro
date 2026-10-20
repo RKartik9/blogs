@@ -1,0 +1,15 @@
+---
+import Editor from '@/components/editor/Editor';
+import Container from '@/components/ui/Container.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getPost } from '@/lib/posts';
+
+const post = await getPost(Astro.params.slug ?? '');
+if (!post) return Astro.rewrite('/404');
+---
+
+<BaseLayout title={`Edit: ${post.title}`} showFooter={false}>
+  <Container size="narrow" class="pt-16 pb-10">
+    <Editor client:only="react" post={post} />
+  </Container>
+</BaseLayout>

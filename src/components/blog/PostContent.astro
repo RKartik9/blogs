@@ -1,0 +1,12 @@
+---
+interface Props {
+  html: string;
+}
+
+const { html } = Astro.props;
+---
+
+<div
+  class="article prose prose-lg max-w-none font-serif prose-invert prose-zinc prose-headings:font-serif prose-headings:font-medium prose-headings:tracking-tight prose-h2:mt-16 prose-h2:text-[1.9rem] prose-h3:mt-10 prose-h3:font-sans prose-h3:text-lg prose-h3:font-semibold prose-p:leading-[1.8] prose-p:text-zinc-300 prose-a:text-accent-400 prose-a:decoration-accent-400/40 prose-a:underline-offset-4 hover:prose-a:decoration-accent-400 prose-blockquote:border-accent-500 prose-blockquote:font-normal prose-blockquote:text-zinc-200 prose-strong:font-semibold prose-strong:text-white prose-code:rounded-md prose-code:bg-white/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-normal prose-pre:rounded-2xl prose-pre:bg-white/[0.03] prose-pre:ring-1 prose-pre:ring-white/10 prose-li:text-zinc-300 prose-li:marker:text-zinc-600 prose-hr:my-14 prose-hr:border-white/10 prose-img:my-12"
+  set:html={html}
+/>

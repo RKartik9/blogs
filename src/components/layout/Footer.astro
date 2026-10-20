@@ -1,0 +1,21 @@
+---
+import Container from '../ui/Container.astro';
+import Logo from '../ui/Logo.astro';
+import { site } from '@/lib/site';
+---
+
+<footer class="mt-32 border-t border-white/[0.08]">
+  <Container class="flex flex-col gap-8 py-12 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex items-center gap-3">
+      <Logo class="size-10" />
+      <div>
+        <p class="font-serif text-lg font-medium tracking-tight">{site.name}</p>
+        <p class="text-sm text-zinc-500">&copy; {new Date().getFullYear()} &middot; All words my own.</p>
+      </div>
+    </div>
+    <nav class="flex items-center gap-6 text-sm text-zinc-500">
+      <a href={site.portfolio.href} class="transition hover:text-white">{site.portfolio.label} <span aria-hidden="true">&nearr;</span></a>
+      <a href="#" class="transition hover:text-white">Back to top &uarr;</a>
+    </nav>
+  </Container>
+</footer>

@@ -1,0 +1,48 @@
+---
+import EmptyState from '@/components/blog/EmptyState.astro';
+import FeaturedPost from '@/components/blog/FeaturedPost.astro';
+import PostRow from '@/components/blog/PostRow.astro';
+import Container from '@/components/ui/Container.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { listPosts } from '@/lib/posts';
+import { site } from '@/lib/site';
+
+const posts = await listPosts();
+const [featured, ...rest] = posts;
+---
+
+<BaseLayout>
+  <section class="relative isolate">
+    <div class="backdrop" aria-hidden="true"></div>
+    <Container class="pt-24 pb-16 text-center sm:pt-36 sm:pb-24">
+      <p class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-zinc-400">
+        <span class="size-1.5 rounded-full bg-accent-500"></span>
+        {posts.length} {posts.length === 1 ? 'article' : 'articles'} by {site.name}
+      </p>
+      <h1 class="mx-auto mt-7 max-w-3xl font-serif text-5xl leading-[1.05] font-medium tracking-tight text-balance sm:text-7xl">
+        Writing about building, <em class="font-normal text-accent-400">learning</em> and everything between.
+      </h1>
+      <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-pretty text-zinc-400">{site.description}</p>
+    </Container>
+  </section>
+
+  <Container>
+    {
+      featured ? (
+        <div class="flex flex-col gap-20">
+          <FeaturedPost post={featured} />
+          {rest.length > 0 && (
+            <section class="mx-auto w-full max-w-3xl">
+              <h2 class="text-xs font-medium tracking-[0.2em] text-zinc-500 uppercase">More writing</h2>
+              <ol class="mt-4 divide-y divide-white/[0.06]">
+                {rest.map((post) => <PostRow post={post} />)}
+              </ol>
+            </section>
+          )}
+        </div>
+      ) : (
+        <EmptyState />
+      )
+    }
+  </Container>
+</BaseLayout>

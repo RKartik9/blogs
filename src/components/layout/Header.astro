@@ -1,0 +1,31 @@
+---
+import Button from '../ui/Button.astro';
+import Logo from '../ui/Logo.astro';
+import { site } from '@/lib/site';
+
+const { isAdmin } = Astro.locals;
+---
+
+<header class="site-header relative z-30 mt-3 px-3 sm:mt-4 sm:px-4">
+  <nav
+    class:list={[
+      'mx-auto flex items-center justify-between gap-2 rounded-full border border-white/10 bg-zinc-950/70 py-1.5 pl-1.5 shadow-2xl shadow-black/40 backdrop-blur-xl',
+      isAdmin ? 'max-w-3xl pr-1.5' : 'w-fit pr-3',
+    ]}
+  >
+    <a href="/" class="flex shrink-0 items-center gap-2.5 rounded-full pr-2" aria-label={`${site.name}, home`}>
+      <Logo class="size-9" />
+      <span class:list={['font-serif text-lg font-medium tracking-tight max-[340px]:hidden', isAdmin && 'max-sm:hidden']}>{site.name}</span>
+    </a>
+    {
+      isAdmin && (
+        <div class="flex items-center gap-0.5">
+          <form method="post" action="/logout">
+            <Button type="submit" variant="ghost">Log out</Button>
+          </form>
+          <Button href="/editor/new">New post</Button>
+        </div>
+      )
+    }
+  </nav>
+</header>

@@ -1,0 +1,18 @@
+---
+import { formatDate, readingTime } from '@/lib/format';
+import { toPlainText } from '@/lib/sanitize';
+import type { Post } from '@/lib/types';
+
+interface Props {
+  post: Post;
+  class?: string;
+}
+
+const { post, class: className } = Astro.props;
+---
+
+<div class:list={['flex items-center gap-2 text-sm text-zinc-500', className]}>
+  <time datetime={post.createdAt}>{formatDate(post.createdAt)}</time>
+  <span aria-hidden="true" class="size-0.5 rounded-full bg-current"></span>
+  <span>{readingTime(toPlainText(post.html))}</span>
+</div>
