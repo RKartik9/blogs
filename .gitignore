@@ -3,5 +3,4 @@ dist/
 .astro/
 .env
 .DS_Store
-data/uploads/*
-!data/uploads/.gitkeep
+.vercel/

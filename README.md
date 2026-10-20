@@ -46,7 +46,7 @@ Visitors can only read. The editor, the API and image uploads all require the se
 
 It's a plain Node server (`dist/server/entry.mjs`), so anything that runs Node and has a persistent disk works: a VPS, Railway, Fly.io with a volume, and so on. Serverless hosts without a writable disk won't, since posts and images are saved to `data/`.
 
-`data/uploads/` is git-ignored. If you deploy from git, copy that folder to the server separately or remove its line from `.gitignore`.
+**Vercel:** the build switches to the Vercel adapter automatically and bundles `data/` into the function. Vercel has no writable disk, so the live site is read-only: write posts locally with `npm run dev`, then commit `data/` and push to publish.
 
 Behind a reverse proxy, serve over HTTPS: the session cookie is marked `Secure` in production builds.
 
